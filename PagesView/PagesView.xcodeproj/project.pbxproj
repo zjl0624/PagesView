@@ -17,6 +17,7 @@
 		5FD623291FB2F97F00F9CDC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FD623271FB2F97F00F9CDC8 /* LaunchScreen.storyboard */; };
 		5FD623341FB2F97F00F9CDC8 /* PagesViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD623331FB2F97F00F9CDC8 /* PagesViewTests.m */; };
 		5FD6233F1FB2F97F00F9CDC8 /* PagesViewUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD6233E1FB2F97F00F9CDC8 /* PagesViewUITests.m */; };
+		5FD9FF801FBAD83500349C2E /* ContentCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FD9FF7F1FBAD83500349C2E /* ContentCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		5FD6233A1FB2F97F00F9CDC8 /* PagesViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PagesViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD6233E1FB2F97F00F9CDC8 /* PagesViewUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PagesViewUITests.m; sourceTree = "<group>"; };
 		5FD623401FB2F97F00F9CDC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5FD9FF7E1FBAD83500349C2E /* ContentCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentCollectionViewCell.h; sourceTree = "<group>"; };
+		5FD9FF7F1FBAD83500349C2E /* ContentCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +156,8 @@
 				5F7100071FB4401C00392B61 /* PagesView.m */,
 				5F7100091FB449D800392B61 /* TitleCollectionViewCell.h */,
 				5F71000A1FB449D800392B61 /* TitleCollectionViewCell.m */,
+				5FD9FF7E1FBAD83500349C2E /* ContentCollectionViewCell.h */,
+				5FD9FF7F1FBAD83500349C2E /* ContentCollectionViewCell.m */,
 			);
 			path = PagesView;
 			sourceTree = "<group>";
@@ -305,6 +310,7 @@
 				5FC638931FB586A50040AF0E /* ContentViewController.m in Sources */,
 				5FD6231B1FB2F97F00F9CDC8 /* main.m in Sources */,
 				5F71000B1FB449D800392B61 /* TitleCollectionViewCell.m in Sources */,
+				5FD9FF801FBAD83500349C2E /* ContentCollectionViewCell.m in Sources */,
 				5F7100051FB43DDA00392B61 /* PageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 @interface TitleCollectionViewCell : UICollectionViewCell
 
-- (void)configureCellWithTitle:(NSString *)title itemSize:(CGSize)itemSize;
+- (void)configureCellWithTitle:(NSString *)title itemSize:(CGSize)itemSize color:(UIColor *)color;
 @end

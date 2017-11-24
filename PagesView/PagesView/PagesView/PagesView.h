@@ -18,17 +18,21 @@
 
 //每一个标题的宽度,只有当允许滚动的时候，该属性才生效
 @property (nonatomic,assign) float titleWidth;
-
+//当前选择的页面的位置
+@property (nonatomic,assign) NSInteger currentSelectIndex;
 //滚动条标题的数组
 @property (nonatomic,strong) NSArray *titleArray;
 
 //viewcontroller的数组
 @property (nonatomic,strong) NSArray *viewControllersArray;
-
-
-
+//标识当前页面标题的颜色，默认是红色
+@property (nonatomic,strong) UIColor *currentSelectTitleColor;
+//标识当前页面的下划线颜色，默认为黑色
+@property (nonatomic,strong) UIColor *currentSelectLineColor;
+//下划线的高度，默认为1
+@property (nonatomic,assign) float currentSelectLineHeight;
 //初始化一个默认的pagesview
-- (instancetype)initDefaultPagesViewWithTitleArray:(NSArray *)titleArray
+- (instancetype)initPagesViewWithTitleArray:(NSArray *)titleArray
 							  viewControllersArray:(NSArray *)viewControllersArray
 									viewController:(UIViewController *)parentViewController;
 @end

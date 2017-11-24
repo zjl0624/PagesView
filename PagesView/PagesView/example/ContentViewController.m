@@ -11,6 +11,7 @@
 @interface ContentViewController () {
 	UILabel *contentLabel;
 	UIButton *testButton;
+	UITapGestureRecognizer *tapGesture;
 }
 
 @end
@@ -32,6 +33,7 @@
 	contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
 	contentLabel.textAlignment = NSTextAlignmentCenter;
 	contentLabel.text = self.content;
+	contentLabel.userInteractionEnabled = YES;
 	[self.view addSubview:contentLabel];
 	
 	testButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -40,10 +42,14 @@
 	[self.view addSubview:testButton];
 	[testButton addTarget:self action:@selector(testButtonClick) forControlEvents:UIControlEventTouchUpInside];
 	
+	tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
+	[contentLabel addGestureRecognizer:tapGesture];
 }
 
 - (void)testButtonClick {
 	NSLog(@"点击了按钮");
 }
-
+- (void)tap {
+	NSLog(@"点击了标签");
+}
 @end
