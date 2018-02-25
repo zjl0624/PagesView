@@ -174,6 +174,8 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 #pragma mark - KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
 	NSLog(@"%@",change[@"new"]);
+	NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.currentSelectIndex inSection:0];
+	[_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
 	[UIView animateWithDuration:0.25 animations:^{
 		self.currentSelectLineView.frame = CGRectMake(self.currentSelectIndex * CGRectGetWidth(self.currentSelectLineView.frame), CGRectGetMinY(self.currentSelectLineView.frame), CGRectGetWidth(self.currentSelectLineView.frame), CGRectGetHeight(self.currentSelectLineView.frame));
 	} completion:^(BOOL finished) {
