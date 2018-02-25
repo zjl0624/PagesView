@@ -37,10 +37,10 @@
 		[viewControllersArray addObject:contentVC];
 	}];
 	PagesView *pagesView = [[PagesView alloc] initPagesViewWithTitleArray:titleArray viewControllersArray:viewControllersArray viewController:self];
-	pagesView.isTitleScroll = YES;
-//	pagesView.collectionViewHeight = 30;
-//	pagesView.titleWidth = 90;
-//	pagesView.currentSelectLineHeight = 1;
+//	pagesView.isTitleScroll = YES;
+//	pagesView.collectionViewHeight = 20;
+//	pagesView.titleWidth = 60;
+//	pagesView.currentSelectLineHeight = 5;
 	[self.view addSubview:pagesView];
 }
 

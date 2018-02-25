@@ -12,7 +12,9 @@
 
 NSString *const CellIdentifier = @"cell";
 NSString *const ContentCellidentifier = @"ContentCell";
-float const CurrentSelectLineHeight = 3;
+float const DefaultCurrentSelectLineHeight = 1;
+float const DefaultCollectionViewHeight = 60;
+float const DefaultTitleWidth = 120;
 typedef NS_ENUM(NSInteger,CollectionViewTag){
 	titleCollectionViewTag,
 	contentCollectionViewTag
@@ -52,9 +54,9 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		_layout = [[UICollectionViewFlowLayout alloc] init];
 		_layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 		self.isTitleScroll = NO;
-		self.collectionViewHeight = 60;
-		self.titleWidth = 120;
-		self.currentSelectLineHeight = 1;
+		self.collectionViewHeight = DefaultCollectionViewHeight;
+		self.titleWidth = DefaultTitleWidth;
+		self.currentSelectLineHeight = DefaultCurrentSelectLineHeight;
 //		if (_isTitleScroll) {
 //			_layout.itemSize = CGSizeMake(_titleWidth, _collectionViewHeight);
 //		}else {
@@ -88,7 +90,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		_contentLayout.minimumLineSpacing = 0;
 		_contentLayout.minimumInteritemSpacing = 0;
 		_contentCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_collectionView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame)) collectionViewLayout:_contentLayout];
-		_contentCollectionView.backgroundColor = [UIColor whiteColor];
+		_contentCollectionView.backgroundColor = [UIColor blueColor];
 		_contentCollectionView.showsHorizontalScrollIndicator = NO;
 		_contentCollectionView.alwaysBounceHorizontal = YES;
 		[self addSubview:_contentCollectionView];
@@ -193,6 +195,8 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		_collectionView.alwaysBounceHorizontal = NO;
 		_layout.itemSize = CGSizeMake(PVScreenWidth/_titleArray.count, _collectionViewHeight);
 	}
+	_contentLayout.itemSize = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - _collectionViewHeight);
+
 	[self updateUI];
 
 }
