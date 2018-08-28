@@ -227,7 +227,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 	[_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     [self.delegate currentSelectIndex:self.currentSelectIndex];
     self.currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SelectPageViewNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SelectPageViewNotification object:nil userInfo:@{@"currentSelectIndex":@(self.currentSelectIndex)}];
 //    [UIView animateWithDuration:0.3 animations:^{
 //        self.currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
 //    } completion:^(BOOL finished) {
