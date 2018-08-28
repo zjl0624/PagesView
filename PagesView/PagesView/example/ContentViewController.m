@@ -7,6 +7,7 @@
 //
 
 #import "ContentViewController.h"
+#import "PagesView.h"
 
 @interface ContentViewController () {
 	UILabel *contentLabel;
@@ -20,6 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.frame =CGRectMake(0, 0, PVScreenWidth, PVScreenHeight - 64 - 48 - 56);
 	[self initUI];
 }
 

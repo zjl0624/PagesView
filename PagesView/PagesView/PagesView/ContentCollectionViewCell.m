@@ -10,7 +10,7 @@
 
 @implementation ContentCollectionViewCell
 - (void)configureWithViewController:(UIViewController *)vc {
-	self.contentView.backgroundColor = [UIColor redColor];
+	self.contentView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	UIView *vcView = vc.view;
 	vcView.frame = CGRectMake(0, 0, CGRectGetWidth(vcView.frame), CGRectGetHeight(self.contentView.frame));
 	[self.contentView addSubview:vcView];

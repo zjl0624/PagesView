@@ -9,18 +9,25 @@
 #import "PagesView.h"
 #import "TitleCollectionViewCell.h"
 #import "ContentCollectionViewCell.h"
-
-NSString *const CellIdentifier = @"cell";
-NSString *const ContentCellidentifier = @"ContentCell";
-float const DefaultCurrentSelectLineHeight = 1;
-float const DefaultCollectionViewHeight = 60;
-float const DefaultTitleWidth = 120;
+#import "UIViewController+AddProperties.h"
+NSString * const SelectPageViewNotification = @"SelectPageViewNotification";
+static NSString *const CellIdentifier = @"cell";
+static NSString *const ContentCellidentifier = @"ContentCell";
+static float const DefaultCurrentSelectLineHeight = 2;
+static float const DefaultCollectionViewHeight = 40;
+static float const DefaultTitleWidth = 40;
+static float const DefaultTiltleFontSize = 14;
 typedef NS_ENUM(NSInteger,CollectionViewTag){
 	titleCollectionViewTag,
 	contentCollectionViewTag
 	
 };
-@interface PagesView()<UICollectionViewDelegate,UICollectionViewDataSource>
+@interface PagesView()<UICollectionViewDelegate,UICollectionViewDataSource,UIScrollViewDelegate> {
+    CGFloat contentOffSetX;
+    CGFloat lastX;//上次的位置
+    CGFloat scrollDistance;//当前滑动的距离
+    CGRect lastFrame;//下划线view上次停靠的位置
+}
 
 //标题栏的collectionview的layout
 @property (nonatomic,strong) UICollectionViewFlowLayout *layout;
@@ -30,7 +37,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 @property (nonatomic,strong) UICollectionView *contentCollectionView;
 ////内容collectionview的layout
 @property (nonatomic,strong) UICollectionViewFlowLayout *contentLayout;
-@property (nonatomic,strong) UIViewController *parentViewController;
+//@property (nonatomic,strong) UIViewController *parentViewController;
 
 @property (nonatomic,strong) UIView *currentSelectLineView;
 @end
@@ -38,34 +45,30 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 
 - (instancetype)initPagesViewWithTitleArray:(NSArray *)titleArray
 							  viewControllersArray:(NSArray *)viewControllersArray
-									viewController:(UIViewController *)parentViewController{
-	self = [super init];
+                             viewController:(UIViewController *)parentViewController delegate:(id<PagesViewDelegate>)delegate frame:(CGRect)frame{
+	self = [super initWithFrame:frame];
 	if (self) {
 		//设置初始化信息
-		self.frame = CGRectMake(0, 64, PVScreenWidth, PVScreenHeight - 64);
-//		[parentViewController.view addSubview:self];
+        
 		_currentSelectTitleColor = [UIColor redColor];
-		_currentSelectLineColor = [UIColor blackColor];
-		_parentViewController = parentViewController;
+		_currentSelectLineColor = [UIColor redColor];
+        _normalTitleColor = [UIColor colorWithRed:0x51/255 green:0x51/255 blue:0x51/255 alpha:1];
+//        _parentViewController = parentViewController;
 		_titleArray = titleArray;
 		_viewControllersArray = viewControllersArray;
-
+        _isTitleScroll = NO;
+        _collectionViewHeight = DefaultCollectionViewHeight;
+        _titleWidth = DefaultTitleWidth;
+        _currentSelectLineHeight = DefaultCurrentSelectLineHeight;
+        _titleFontSize = DefaultTiltleFontSize;
 		//初始化collectview标题栏
 		_layout = [[UICollectionViewFlowLayout alloc] init];
 		_layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-		self.isTitleScroll = NO;
-		self.collectionViewHeight = DefaultCollectionViewHeight;
-		self.titleWidth = DefaultTitleWidth;
-		self.currentSelectLineHeight = DefaultCurrentSelectLineHeight;
-//		if (_isTitleScroll) {
-//			_layout.itemSize = CGSizeMake(_titleWidth, _collectionViewHeight);
-//		}else {
-//			_layout.itemSize = CGSizeMake(PVScreenWidth/_titleArray.count, _collectionViewHeight);
-//		}
 		_layout.minimumLineSpacing = 0;
 		_layout.minimumInteritemSpacing = 0;
 		
-		_collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, PVScreenWidth, _collectionViewHeight) collectionViewLayout:_layout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), _collectionViewHeight) collectionViewLayout:_layout];
+//        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:_layout];
 		_collectionView.showsHorizontalScrollIndicator = NO;
 		_collectionView.alwaysBounceHorizontal = YES;
 		_collectionView.backgroundColor = [UIColor whiteColor];
@@ -75,14 +78,15 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		[self addSubview:_collectionView];
 		_collectionView.delegate = self;
 		_collectionView.dataSource = self;
-		
-		//添加viewcontroller到父viewcontroller里面
-		[viewControllersArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			UIViewController *vc = (UIViewController *)obj;
-			[parentViewController addChildViewController:vc];
-			[vc didMoveToParentViewController:parentViewController];
-			[vc.view setFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame))];
-		}];
+        //添加viewcontroller到父viewcontroller里面
+        [_viewControllersArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            UIViewController *vc = (UIViewController *)obj;
+            [parentViewController addChildViewController:vc];
+            [vc didMoveToParentViewController:parentViewController];
+            vc.realFrame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame));
+            vc.index = idx;
+        }];
+
 		//初始化内容的collectionview
 		_contentLayout = [[UICollectionViewFlowLayout alloc] init];
 		_contentLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -90,7 +94,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		_contentLayout.minimumLineSpacing = 0;
 		_contentLayout.minimumInteritemSpacing = 0;
 		_contentCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_collectionView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame)) collectionViewLayout:_contentLayout];
-		_contentCollectionView.backgroundColor = [UIColor blueColor];
+		_contentCollectionView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 		_contentCollectionView.showsHorizontalScrollIndicator = NO;
 		_contentCollectionView.alwaysBounceHorizontal = YES;
 		[self addSubview:_contentCollectionView];
@@ -99,17 +103,52 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		_contentCollectionView.delegate = self;
 		_contentCollectionView.dataSource = self;
 		_contentCollectionView.pagingEnabled = YES;
-//		_contentCollectionView.allowsSelection = NO;
-//		_contentCollectionView.decelerationRate = 0;
-//		_contentCollectionView.bounces = NO;
-		_currentSelectLineView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_collectionView.frame) - _currentSelectLineHeight,_layout.itemSize.width, _currentSelectLineHeight)];
+        _contentCollectionView.bounces = NO;
+		_currentSelectLineView = [[UIView alloc] init];
 		_currentSelectLineView.backgroundColor = _currentSelectLineColor;
 		[self.collectionView addSubview:_currentSelectLineView];
 		
-		
+        self.delegate = delegate;
 		[self addObserver:self forKeyPath:@"currentSelectIndex" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
 	}
 	return self;
+}
+
+- (void)layoutSubviews {
+    if (_isTitleScroll) {
+        _layout.itemSize = CGSizeMake(_titleWidth, _collectionViewHeight);
+        _collectionView.alwaysBounceHorizontal = YES;
+    }else {
+        _collectionView.alwaysBounceHorizontal = NO;
+        _layout.itemSize = CGSizeMake(PVScreenWidth/_titleArray.count, _collectionViewHeight);
+    }
+
+    _contentLayout.itemSize = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - _collectionViewHeight);
+    _collectionView.frame = CGRectMake(CGRectGetMinX(_collectionView.frame), CGRectGetMinY(_collectionView.frame), CGRectGetWidth(_collectionView.frame), _collectionViewHeight);
+    [_viewControllersArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        UIViewController *vc = (UIViewController *)obj;
+        vc.realFrame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame));
+    }];
+    _contentCollectionView.frame = CGRectMake(0, CGRectGetMaxY(_collectionView.frame),CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame));
+    _currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.tag == contentCollectionViewTag ) {
+//        NSLog(@"%f",scrollView.contentOffset.x);
+        self.currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:scrollView];
+        [self.collectionView reloadData];
+    }
+
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -125,13 +164,30 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	if (collectionView.tag == titleCollectionViewTag) {
 		TitleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+        CGFloat r = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+        if (r < 0) {
+            r = -r;
+        }
+        CGFloat g = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+        if (g < 0) {
+            g = -g;
+        }
+        CGFloat b = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
+        if (b < 0) {
+            b = -b;
+        }
+//        NSLog(@"190 - r = %f", 190 - r);
+//        NSLog(@"190 - r =%f  51 + r = %f", 190 - r,51 + r);
 		UIColor *textColor;
-		if (_currentSelectIndex == indexPath.row) {
-			textColor = _currentSelectTitleColor;
-		}else {
-			textColor = [UIColor blackColor];
-		}
+        if (_currentSelectIndex == indexPath.row) {
+            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - b) alpha:1];
+        }else {
+            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] + b) alpha:1];
+        }
+        
+
 		[cell configureCellWithTitle:_titleArray[indexPath.row] itemSize:_layout.itemSize color:textColor];
+        cell.titleLabel.font = [UIFont systemFontOfSize:self.titleFontSize];
 		return cell;
 	}else {
 		ContentCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ContentCellidentifier forIndexPath:indexPath];
@@ -155,70 +211,170 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 	}
 
 }
-#pragma mark - UIScrollViewDelegate
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-	if (scrollView.tag == contentCollectionViewTag) {
-		self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
-		[_collectionView reloadData];
-	}
-
-}
 
 #pragma mark - ScrollItem
 - (void)scrollItemWithIndexPath:(NSIndexPath *)indexPath{
-
 	[_contentCollectionView setContentOffset:CGPointMake(indexPath.row * CGRectGetWidth(self.frame), 0) animated:YES];
-	self.currentSelectIndex = indexPath.row;
-	[_collectionView reloadData];
 }
+
 
 #pragma mark - KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
 	NSLog(@"%@",change[@"new"]);
+    lastX = self.contentCollectionView.contentOffset.x;
+    lastFrame = self.currentSelectLineView.frame;
 	NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.currentSelectIndex inSection:0];
 	[_collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-	[UIView animateWithDuration:0.25 animations:^{
-		self.currentSelectLineView.frame = CGRectMake(self.currentSelectIndex * CGRectGetWidth(self.currentSelectLineView.frame), CGRectGetMinY(self.currentSelectLineView.frame), CGRectGetWidth(self.currentSelectLineView.frame), CGRectGetHeight(self.currentSelectLineView.frame));
-	} completion:^(BOOL finished) {
-		
-	}];
+    [self.delegate currentSelectIndex:self.currentSelectIndex];
+    self.currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SelectPageViewNotification object:nil];
+//    [UIView animateWithDuration:0.3 animations:^{
+//        self.currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
+//    } completion:^(BOOL finished) {
+//
+//    }];
 }
 
 #pragma mark - Setter Method
+
+- (void)setTitleFontSize:(CGFloat)titleFontSize {
+    _titleFontSize = titleFontSize;
+    [self layoutIfNeeded];
+}
+
+- (void)setCurrentSelectTitleColor:(UIColor *)currentSelectTitleColor {
+    _currentSelectTitleColor = currentSelectTitleColor;
+    [self layoutIfNeeded];
+}
+
 - (void)setIsTitleScroll:(BOOL)isTitleScroll {
 	_isTitleScroll = isTitleScroll;
-	if (_isTitleScroll) {
-		_layout.itemSize = CGSizeMake(_titleWidth, _collectionViewHeight);
-		_collectionView.alwaysBounceHorizontal = YES;
-	}else {
-		_collectionView.alwaysBounceHorizontal = NO;
-		_layout.itemSize = CGSizeMake(PVScreenWidth/_titleArray.count, _collectionViewHeight);
-	}
-	_contentLayout.itemSize = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - _collectionViewHeight);
-
-	[self updateUI];
+    [self layoutIfNeeded];
 
 }
 
 - (void)setCollectionViewHeight:(float)collectionViewHeight {
 	_collectionViewHeight = collectionViewHeight;
-	self.isTitleScroll = _isTitleScroll;
+    [self layoutIfNeeded];
+	
 }
 
 - (void)setTitleWidth:(float)titleWidth {
 	_titleWidth = titleWidth;
-	self.isTitleScroll = _isTitleScroll;
+    [self layoutIfNeeded];
+    
 }
 
 - (void)setCurrentSelectLineHeight:(float)currentSelectLineHeight {
 	_currentSelectLineHeight = currentSelectLineHeight;
-	self.isTitleScroll = _isTitleScroll;
+    [self layoutIfNeeded];
 }
+
+- (void)setCurrentSelectLineColor:(UIColor *)currentSelectLineColor {
+    _currentSelectLineColor = currentSelectLineColor;
+    _currentSelectLineView.backgroundColor = _currentSelectLineColor;
+    [self layoutIfNeeded];
+}
+
+#pragma mark - private method
 - (void)updateUI {
 	_collectionView.frame = CGRectMake(CGRectGetMinX(_collectionView.frame), CGRectGetMinY(_collectionView.frame), CGRectGetWidth(_collectionView.frame), _collectionViewHeight);
 	_contentCollectionView.frame = CGRectMake(0, CGRectGetMaxY(_collectionView.frame),CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame));
 	_currentSelectLineView.frame = CGRectMake(0, CGRectGetMaxY(_collectionView.frame) - _currentSelectLineHeight,_layout.itemSize.width, _currentSelectLineHeight);
+}
+
+
+- (CGRect)getCurrentLineViewLocationWithScrollView:(UIScrollView *)scrollView {
+    scrollDistance = scrollView.contentOffset.x - lastX;
+    
+    contentOffSetX = scrollView.contentOffset.x / [_titleArray count];
+
+    NSString *currentTitle = _titleArray[_currentSelectIndex];
+    CGSize currentTitleSize = [currentTitle boundingRectWithSize:CGSizeMake(1000, 1000) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.titleFontSize]} context:nil].size;;
+
+    NSString *nextTitle;
+    CGSize nextTitleSize = CGSizeZero;
+    if (scrollDistance > 0) {
+        nextTitle = _titleArray[_currentSelectIndex + 1];
+    }else if (scrollDistance < 0){
+        nextTitle = _titleArray[_currentSelectIndex - 1];
+    }
+    nextTitleSize = [nextTitle boundingRectWithSize:CGSizeMake(1000, 1000) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.titleFontSize]} context:nil].size;
+    CGFloat distance = nextTitleSize.width - currentTitleSize.width;
+
+    if (contentOffSetX <= 0) {
+        contentOffSetX = 0;
+    }
+    
+    if (contentOffSetX > CGRectGetWidth(self.frame) / [_titleArray count]) {
+        
+        contentOffSetX = CGRectGetWidth(self.frame) / [_titleArray count];
+    }
+    CGFloat titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
+    if (lastFrame.size.height == 0) {
+        lastFrame = CGRectMake(titleCellWidth / 2 - currentTitleSize.width/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, currentTitleSize.width, self.currentSelectLineHeight);
+    }
+    CGRect re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth -  fabs(distance / 2))  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame), (distance / titleCellWidth) * fabs(scrollDistance / [_titleArray count]) + CGRectGetWidth(lastFrame), CGRectGetHeight(lastFrame));
+//    NSLog(@"x=%f,y=%f,w=%f,h=%f",re.origin.x,re.origin.y,re.size.width,re.size.height);
+
+    return re;
+
+}
+
+//获取navigationBar的高度
+- (CGFloat)getNavigationBarHeight {
+    if (([UIScreen mainScreen].bounds.size.width == 375.0f && [UIScreen mainScreen].bounds.size.height == 812.0f)) {
+        return 88;
+    }else {
+        return 64;
+    }
+}
+//获取下面的高度
+- (CGFloat)getTabbarHeight {
+    if (([UIScreen mainScreen].bounds.size.width == 375.0f && [UIScreen mainScreen].bounds.size.height == 812.0f)) {
+        return 34;
+    }else {
+        return 0;
+    }
+}
+
+
+- (NSDictionary *)getRGBDictionaryByColor:(UIColor *)originColor
+
+{
+    
+    CGFloat r=0,g=0,b=0,a=0;
+    
+    if ([self respondsToSelector:@selector(getRed:green:blue:alpha:)]) {
+        
+        [originColor getRed:&r green:&g blue:&b alpha:&a];
+        
+    }
+    
+    else {
+        
+        const CGFloat *components = CGColorGetComponents(originColor.CGColor);
+        
+        r = components[0];
+        
+        g = components[1];
+        
+        b = components[2];
+        
+        a = components[3];
+        
+    }
+    
+    
+    
+    return @{@"R":@(r),
+             
+             @"G":@(g),
+             
+             @"B":@(b),
+             
+             @"A":@(a)};
+    
 }
 - (void)dealloc {
 	[self removeObserver:self forKeyPath:@"currentSelectIndex"];

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		146C7F002134F3910092C517 /* UIViewController+AddProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 146C7EFF2134F3910092C517 /* UIViewController+AddProperties.m */; };
 		5F7100051FB43DDA00392B61 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F7100041FB43DDA00392B61 /* PageViewController.m */; };
 		5F7100081FB4401C00392B61 /* PagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F7100071FB4401C00392B61 /* PagesView.m */; };
 		5F71000B1FB449D800392B61 /* TitleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F71000A1FB449D800392B61 /* TitleCollectionViewCell.m */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		146C7EFE2134F3900092C517 /* UIViewController+AddProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+AddProperties.h"; sourceTree = "<group>"; };
+		146C7EFF2134F3910092C517 /* UIViewController+AddProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+AddProperties.m"; sourceTree = "<group>"; };
 		5F7100031FB43DDA00392B61 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
 		5F7100041FB43DDA00392B61 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewController.m; sourceTree = "<group>"; };
 		5F7100061FB4401C00392B61 /* PagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PagesView.h; sourceTree = "<group>"; };
@@ -152,6 +155,8 @@
 		5FD6234C1FB2F9C900F9CDC8 /* PagesView */ = {
 			isa = PBXGroup;
 			children = (
+				146C7EFE2134F3900092C517 /* UIViewController+AddProperties.h */,
+				146C7EFF2134F3910092C517 /* UIViewController+AddProperties.m */,
 				5F7100061FB4401C00392B61 /* PagesView.h */,
 				5F7100071FB4401C00392B61 /* PagesView.m */,
 				5F7100091FB449D800392B61 /* TitleCollectionViewCell.h */,
@@ -308,6 +313,7 @@
 			files = (
 				5FD6231E1FB2F97F00F9CDC8 /* AppDelegate.m in Sources */,
 				5F7100081FB4401C00392B61 /* PagesView.m in Sources */,
+				146C7F002134F3910092C517 /* UIViewController+AddProperties.m in Sources */,
 				5FC638931FB586A50040AF0E /* ContentViewController.m in Sources */,
 				5FD6231B1FB2F97F00F9CDC8 /* main.m in Sources */,
 				5F71000B1FB449D800392B61 /* TitleCollectionViewCell.m in Sources */,

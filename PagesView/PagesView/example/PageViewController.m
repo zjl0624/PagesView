@@ -29,14 +29,14 @@
 }
 
 - (void)initPagesView {
-	NSArray *titleArray = @[@"标题1",@"标题2",@"标题3",@"标题4",@"标题5"];
+	NSArray *titleArray = @[@"标签一",@"标签二二二二"];
 	NSMutableArray *viewControllersArray = [[NSMutableArray alloc] init];
 	[titleArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		ContentViewController *contentVC = [[ContentViewController alloc] init];
 		contentVC.content = [NSString stringWithFormat:@"%@的页面",obj];
 		[viewControllersArray addObject:contentVC];
 	}];
-	PagesView *pagesView = [[PagesView alloc] initPagesViewWithTitleArray:titleArray viewControllersArray:viewControllersArray viewController:self];
+	PagesView *pagesView = [[PagesView alloc] initPagesViewWithTitleArray:titleArray viewControllersArray:viewControllersArray viewController:self delegate:nil frame:CGRectMake(0, 64, PVScreenWidth, PVScreenHeight - 64)];
 //	pagesView.isTitleScroll = YES;
 //	pagesView.collectionViewHeight = 20;
 //	pagesView.titleWidth = 60;

@@ -10,4 +10,5 @@
 
 @interface ContentViewController : UIViewController
 @property (nonatomic,strong) NSString *content;
+@property (nonatomic,copy) NSString *test;
 @end

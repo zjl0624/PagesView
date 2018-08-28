@@ -8,7 +8,7 @@
 
 #import "TitleCollectionViewCell.h"
 @interface TitleCollectionViewCell()
-@property (nonatomic,strong) UILabel *titleLabel;
+
 @end
 @implementation TitleCollectionViewCell
 
@@ -17,6 +17,7 @@
 	if (!_titleLabel) {
 		self.contentView.backgroundColor = [UIColor whiteColor];
 		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, itemSize.width, itemSize.height)];
+        _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		[self.contentView addSubview:_titleLabel];
 		_titleLabel.textAlignment = NSTextAlignmentCenter;
 	}

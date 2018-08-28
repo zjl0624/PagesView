@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 @interface TitleCollectionViewCell : UICollectionViewCell
-
+@property (nonatomic,strong) UILabel *titleLabel;
 - (void)configureCellWithTitle:(NSString *)title itemSize:(CGSize)itemSize color:(UIColor *)color;
 @end
