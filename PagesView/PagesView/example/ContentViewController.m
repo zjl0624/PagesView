@@ -9,6 +9,7 @@
 #import "ContentViewController.h"
 #import "PagesView.h"
 
+
 @interface ContentViewController () {
 	UILabel *contentLabel;
 	UIButton *testButton;
@@ -21,7 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.frame =CGRectMake(0, 0, PVScreenWidth, PVScreenHeight - 64 - 48 - 56);
+//    self.view.frame =CGRectMake(0, 0, PVScreenWidth, PVScreenHeight - 64 - 48 - 56);
 	[self initUI];
 }
 
@@ -31,6 +32,7 @@
 }
 
 - (void)initUI {
+    self.view.frame = self.realFrame;//这一句是修改当前controller.view的frame大小，必须要加
 	self.view.backgroundColor = [UIColor lightGrayColor];
 	contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
 	contentLabel.textAlignment = NSTextAlignmentCenter;

@@ -9,7 +9,7 @@
 #import "PagesView.h"
 #import "TitleCollectionViewCell.h"
 #import "ContentCollectionViewCell.h"
-#import "UIViewController+AddProperties.h"
+
 NSString * const SelectPageViewNotification = @"SelectPageViewNotification";
 static NSString *const CellIdentifier = @"cell";
 static NSString *const ContentCellidentifier = @"ContentCell";

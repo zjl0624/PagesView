@@ -10,6 +10,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import "UIViewController+AddProperties.h"
 extern NSString * const SelectPageViewNotification;
 @protocol PagesViewDelegate
 - (void)currentSelectIndex:(NSInteger)index;
