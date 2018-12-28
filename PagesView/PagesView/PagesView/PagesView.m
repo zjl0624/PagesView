@@ -14,7 +14,7 @@ NSString * const SelectPageViewNotification = @"SelectPageViewNotification";
 static NSString *const CellIdentifier = @"cell";
 static NSString *const ContentCellidentifier = @"ContentCell";
 static float const DefaultCurrentSelectLineHeight = 2;
-static float const DefaultCollectionViewHeight = 40;
+static float const DefaultCollectionViewHeight = 44;
 static float const DefaultTitleWidth = 40;
 static float const DefaultTiltleFontSize = 14;
 typedef NS_ENUM(NSInteger,CollectionViewTag){
@@ -50,9 +50,9 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 	if (self) {
 		//设置初始化信息
         
-		_currentSelectTitleColor = [UIColor redColor];
-		_currentSelectLineColor = [UIColor redColor];
-        _normalTitleColor = [UIColor colorWithRed:0x51/255 green:0x51/255 blue:0x51/255 alpha:1];
+		_currentSelectTitleColor = [UIColor colorWithRed:51.0f/255.0f green:51.0f/255.0f blue:51.0f/255.0f alpha:1];
+		_currentSelectLineColor = BlueTextColor;
+        _normalTitleColor = [UIColor colorWithRed:133.0f/255.0f green:133.0f/255.0f blue:133.0f/255.0f alpha:1];
 //        _parentViewController = parentViewController;
 		_titleArray = titleArray;
 		_viewControllersArray = viewControllersArray;
@@ -94,7 +94,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		_contentLayout.minimumLineSpacing = 0;
 		_contentLayout.minimumInteritemSpacing = 0;
 		_contentCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_collectionView.frame), CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - CGRectGetHeight(_collectionView.frame)) collectionViewLayout:_contentLayout];
-		_contentCollectionView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+		_contentCollectionView.backgroundColor = [UIColor whiteColor];
 		_contentCollectionView.showsHorizontalScrollIndicator = NO;
 		_contentCollectionView.alwaysBounceHorizontal = YES;
 		[self addSubview:_contentCollectionView];
@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
         _collectionView.alwaysBounceHorizontal = YES;
     }else {
         _collectionView.alwaysBounceHorizontal = NO;
-        _layout.itemSize = CGSizeMake(PVScreenWidth/_titleArray.count, _collectionViewHeight);
+        _layout.itemSize = CGSizeMake(CGRectGetWidth(self.frame)/_titleArray.count, _collectionViewHeight);
     }
 
     _contentLayout.itemSize = CGSizeMake(CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - _collectionViewHeight);
@@ -177,12 +177,12 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
             b = -b;
         }
 //        NSLog(@"190 - r = %f", 190 - r);
-//        NSLog(@"190 - r =%f  51 + r = %f", 190 - r,51 + r);
+//        NSLog(@"133 - r =%f  51 + r = %f", 133 - r,133 + r);
 		UIColor *textColor;
         if (_currentSelectIndex == indexPath.row) {
-            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - b) alpha:1];
+            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] + b) alpha:1];
         }else {
-            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] + b) alpha:1];
+            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - b) alpha:1];
         }
         
 
@@ -236,15 +236,23 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 }
 
 #pragma mark - Setter Method
+- (void)setTitleArray:(NSArray *)titleArray {
+    _titleArray = titleArray;
+    [self.collectionView reloadData];
+    lastFrame = CGRectZero;
+
+    [self layoutSubviews];
+}
 
 - (void)setTitleFontSize:(CGFloat)titleFontSize {
     _titleFontSize = titleFontSize;
+    [_collectionView reloadData];
     [self layoutIfNeeded];
 }
 
 - (void)setCurrentSelectTitleColor:(UIColor *)currentSelectTitleColor {
     _currentSelectTitleColor = currentSelectTitleColor;
-    [self layoutIfNeeded];
+//    [self layoutIfNeeded];
 }
 
 - (void)setIsTitleScroll:(BOOL)isTitleScroll {

@@ -36,7 +36,7 @@
 		contentVC.content = [NSString stringWithFormat:@"%@的页面",obj];
 		[viewControllersArray addObject:contentVC];
 	}];
-	PagesView *pagesView = [[PagesView alloc] initPagesViewWithTitleArray:titleArray viewControllersArray:viewControllersArray viewController:self delegate:nil frame:CGRectMake(0, 64, PVScreenWidth, PVScreenHeight - 64)];
+	PagesView *pagesView = [[PagesView alloc] initPagesViewWithTitleArray:titleArray viewControllersArray:viewControllersArray viewController:self delegate:nil frame:CGRectMake(0, 88, PVScreenWidth, PVScreenHeight - 88)];
 //	pagesView.isTitleScroll = YES;
 //	pagesView.collectionViewHeight = 20;
 //	pagesView.titleWidth = 60;
