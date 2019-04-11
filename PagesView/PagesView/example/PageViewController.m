@@ -29,7 +29,7 @@
 }
 
 - (void)initPagesView {
-	NSArray *titleArray = @[@"标签一",@"标签二二二二二",@"标签三",@"标签四"];
+	NSArray *titleArray = @[@"标签一",@"标签二二二",@"标签三",@"标签四"];
 	NSMutableArray *viewControllersArray = [[NSMutableArray alloc] init];
 	[titleArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		ContentViewController *contentVC = [[ContentViewController alloc] init];
@@ -41,8 +41,11 @@
 //	pagesView.collectionViewHeight = 20;
 //	pagesView.titleWidth = 60;
 //	pagesView.currentSelectLineHeight = 5;
-    pagesView.normalTitleColor = [UIColor yellowColor];
-    pagesView.currentSelectTitleColor = [UIColor redColor];
+    pagesView.normalTitleColor = [UIColor redColor];
+    pagesView.currentSelectTitleColor = [UIColor yellowColor];
+    pagesView.currentSelectLineWidth = 15;
+//    pagesView.isGradation = YES;
+//    pagesView.isFitSelectLineViewWidth = YES;
 	[self.view addSubview:pagesView];
 }
 

@@ -39,8 +39,14 @@ extern NSString * const SelectPageViewNotification;
 @property (nonatomic,strong) UIColor *normalTitleColor;
 //下划线的高度，默认为2
 @property (nonatomic,assign) float currentSelectLineHeight;
+//下划线宽度，仅仅在isFitSelectLineViewWidth为no时生效
+@property (nonatomic,assign) float currentSelectLineWidth;
 //标题字体大小
 @property (nonatomic,assign) CGFloat titleFontSize;
+//是否标题渐变色，默认no ，还有一些bug
+@property (nonatomic,assign) BOOL isGradation;
+//标题下划线是否根据字体自适应长度
+@property (nonatomic,assign) BOOL isFitSelectLineViewWidth;
 
 @property (nonatomic,weak) id<PagesViewDelegate> delegate;
 //初始化一个默认的pagesview

@@ -168,63 +168,71 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 		TitleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
 
         UIColor *textColor;
-        if (_currentSelectIndex == indexPath.row) {
-            CGFloat r = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-//            if (r < 0) {
-//                r = -r;
-//            }
-            CGFloat g = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-//            if (g < 0) {
-//                g = -g;
-//            }
-            CGFloat b = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
-//            if (b < 0) {
-//                b = -b;
-//            }
-            if (scrollDistance > 0) {
-                textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - b) alpha:1];
-            }else {
-                textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] + b) alpha:1];
-            }
-
-        }else if (indexPath.row == _currentSelectIndex + 1 || _currentSelectIndex - 1 == indexPath.row){
-            CGFloat r = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-            //            if (r < 0) {
-            //                r = -r;
-            //            }
-            CGFloat g = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-            //            if (g < 0) {
-            //                g = -g;
-            //            }
-            CGFloat b = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
-            //            if (b < 0) {
-            //                b = -b;
-            //            }
-
-            if (scrollDistance > 0) {
-                if (_currentSelectIndex + 1 == indexPath.row) {
-                    textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - b) alpha:1];
+        if (self.isGradation) {
+            if (_currentSelectIndex == indexPath.row) {
+                CGFloat r = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+                //            if (r < 0) {
+                //                r = -r;
+                //            }
+                CGFloat g = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+                //            if (g < 0) {
+                //                g = -g;
+                //            }
+                CGFloat b = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
+                //            if (b < 0) {
+                //                b = -b;
+                //            }
+                if (scrollDistance > 0) {
+                    textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - b) alpha:1];
                 }else {
-                    if (indexPath.row == self.currentSelectIndex) {
-                        textColor = self.currentSelectTitleColor;
-                    }else {
-                        textColor = self.normalTitleColor;
-                    }
+                    textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] + b) alpha:1];
                 }
-
-            }else {
-                if (_currentSelectIndex - 1 == indexPath.row) {
-                    textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] + b) alpha:1];
+                
+            }else if (indexPath.row == _currentSelectIndex + 1 || _currentSelectIndex - 1 == indexPath.row){
+                CGFloat r = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+                //            if (r < 0) {
+                //                r = -r;
+                //            }
+                CGFloat g = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+                //            if (g < 0) {
+                //                g = -g;
+                //            }
+                CGFloat b = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
+                //            if (b < 0) {
+                //                b = -b;
+                //            }
+                
+                if (scrollDistance > 0) {
+                    if (_currentSelectIndex + 1 == indexPath.row) {
+                        textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - b) alpha:1];
+                    }else {
+                        if (indexPath.row == self.currentSelectIndex) {
+                            textColor = self.currentSelectTitleColor;
+                        }else {
+                            textColor = self.normalTitleColor;
+                        }
+                    }
+                    
                 }else {
-                    if (indexPath.row == self.currentSelectIndex) {
-                        textColor = self.currentSelectTitleColor;
+                    if (_currentSelectIndex - 1 == indexPath.row) {
+                        textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] + b) alpha:1];
                     }else {
-                        textColor = self.normalTitleColor;
+                        if (indexPath.row == self.currentSelectIndex) {
+                            textColor = self.currentSelectTitleColor;
+                        }else {
+                            textColor = self.normalTitleColor;
+                        }
                     }
+                    
                 }
-
+                
+            }else {
+                if (indexPath.row == self.currentSelectIndex) {
+                    textColor = self.currentSelectTitleColor;
+                }else {
+                    textColor = self.normalTitleColor;
+                }
             }
-
         }else {
             if (indexPath.row == self.currentSelectIndex) {
                 textColor = self.currentSelectTitleColor;
@@ -232,6 +240,7 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
                 textColor = self.normalTitleColor;
             }
         }
+
 //        UIColor *textColor;
 //        if (indexPath.row == self.currentSelectIndex) {
 //            textColor = self.currentSelectTitleColor;
@@ -256,8 +265,11 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 	if (collectionView.tag == titleCollectionViewTag) {
 		if (_currentSelectIndex == indexPath.row) {
 			return;
-		}
-		[self scrollItemWithIndexPath:indexPath];
+        }else if (_currentSelectIndex > indexPath.row) {
+            [self scrollItemWithIndexPath:indexPath isRight:NO];
+        }else if (_currentSelectIndex < indexPath.row) {
+            [self scrollItemWithIndexPath:indexPath isRight:YES];
+        }
 	}else {
 		
 	}
@@ -265,8 +277,21 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 }
 
 #pragma mark - ScrollItem
-- (void)scrollItemWithIndexPath:(NSIndexPath *)indexPath{
+- (void)scrollItemWithIndexPath:(NSIndexPath *)indexPath isRight:(BOOL)isRight{
 	[_contentCollectionView setContentOffset:CGPointMake(indexPath.row * CGRectGetWidth(self.frame), 0) animated:YES];
+//    NSInteger startIndex = labs(indexPath.row - _currentSelectIndex);
+//    if (isRight) {
+//        for (NSInteger i = 0; i < indexPath.row - startIndex; i++) {
+//            [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
+//            self.currentSelectIndex++;
+//        }
+//    }else {
+//        for (NSInteger i = 0; i <startIndex - indexPath.row; i++) {
+//            [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
+//
+//            self.currentSelectIndex--;
+//        }
+//    }
 }
 
 
@@ -336,6 +361,19 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
     [self layoutIfNeeded];
 }
 
+- (void)setIsGradation:(BOOL)isGradation {
+    _isGradation = isGradation;
+    [self.collectionView reloadData];
+}
+
+- (void)setIsFitSelectLineViewWidth:(BOOL)isFitSelectLineViewWidth {
+    _isFitSelectLineViewWidth = isFitSelectLineViewWidth;
+}
+
+- (void)setCurrentSelectLineWidth:(float)currentSelectLineWidth {
+    _currentSelectLineWidth = currentSelectLineWidth;
+}
+
 #pragma mark - private method
 - (void)updateUI {
 	_collectionView.frame = CGRectMake(CGRectGetMinX(_collectionView.frame), CGRectGetMinY(_collectionView.frame), CGRectGetWidth(_collectionView.frame), _collectionViewHeight);
@@ -348,39 +386,65 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
     scrollDistance = scrollView.contentOffset.x - lastX;
     
     contentOffSetX = scrollView.contentOffset.x / [_titleArray count];
-
-    NSString *currentTitle = _titleArray[_currentSelectIndex];
-    CGSize currentTitleSize = [currentTitle boundingRectWithSize:CGSizeMake(1000, 1000) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.titleFontSize]} context:nil].size;;
-
-    NSString *nextTitle;
-    CGSize nextTitleSize = CGSizeZero;
-    if (scrollDistance > 0) {
-        nextTitle = _titleArray[_currentSelectIndex + 1];
-    }else if (scrollDistance < 0){
-        nextTitle = _titleArray[_currentSelectIndex - 1];
-    }
-    nextTitleSize = [nextTitle boundingRectWithSize:CGSizeMake(1000, 1000) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.titleFontSize]} context:nil].size;
-    CGFloat distance = nextTitleSize.width - currentTitleSize.width;
-
-    if (contentOffSetX <= 0) {
-        contentOffSetX = 0;
-    }
-    
-    if (contentOffSetX > CGRectGetWidth(self.frame) / [_titleArray count]) {
-        
-        contentOffSetX = CGRectGetWidth(self.frame) / [_titleArray count];
-    }
-    CGFloat titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
-    if (lastFrame.size.height == 0) {
-        lastFrame = CGRectMake(titleCellWidth / 2 - currentTitleSize.width/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, currentTitleSize.width, self.currentSelectLineHeight);
-    }
     CGRect re;
-    if (scrollDistance < 0) {
-        re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth +  distance / 2)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame), (distance / titleCellWidth) * fabs(scrollDistance / [_titleArray count]) + CGRectGetWidth(lastFrame), CGRectGetHeight(lastFrame));
+    if (self.isFitSelectLineViewWidth) {
+        NSString *currentTitle = _titleArray[_currentSelectIndex];
+        CGSize currentTitleSize = [currentTitle boundingRectWithSize:CGSizeMake(1000, 1000) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.titleFontSize]} context:nil].size;
+        
+        NSString *nextTitle;
+        CGSize nextTitleSize = CGSizeZero;
+        if (scrollDistance > 0 && _currentSelectIndex < [_titleArray count]) {
+            nextTitle = _titleArray[_currentSelectIndex + 1];
+        }else if (scrollDistance < 0 && _currentSelectIndex > 0){
+            nextTitle = _titleArray[_currentSelectIndex - 1];
+        }
+        nextTitleSize = [nextTitle boundingRectWithSize:CGSizeMake(1000, 1000) options:NSStringDrawingTruncatesLastVisibleLine attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:self.titleFontSize]} context:nil].size;
+        CGFloat distance = nextTitleSize.width - currentTitleSize.width;
+        
+        if (contentOffSetX <= 0) {
+            contentOffSetX = 0;
+        }
+        
+        if (contentOffSetX > CGRectGetWidth(self.frame) / [_titleArray count]) {
+            
+            contentOffSetX = CGRectGetWidth(self.frame) / [_titleArray count];
+        }
+        CGFloat titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
+        if (lastFrame.size.height == 0) {
+            lastFrame = CGRectMake(titleCellWidth / 2 - currentTitleSize.width/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, currentTitleSize.width, self.currentSelectLineHeight);
+        }
+        
+        if (scrollDistance < 0) {
+            re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth +  distance / 2)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame), (distance / titleCellWidth) * fabs(scrollDistance / [_titleArray count]) + currentTitleSize.width, CGRectGetHeight(lastFrame));
+        }else {
+            re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth -  distance / 2)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame), (distance / titleCellWidth) * fabs(scrollDistance / [_titleArray count]) + currentTitleSize.width, CGRectGetHeight(lastFrame));
+        }
+        //    NSLog(@"x=%f,y=%f,w=%f,h=%f",re.origin.x,re.origin.y,re.size.width,re.size.height);
     }else {
-       re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth -  distance / 2)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame), (distance / titleCellWidth) * fabs(scrollDistance / [_titleArray count]) + CGRectGetWidth(lastFrame), CGRectGetHeight(lastFrame));
+        
+        if (contentOffSetX <= 0) {
+            contentOffSetX = 0;
+        }
+        
+        if (contentOffSetX > CGRectGetWidth(self.frame) / [_titleArray count]) {
+            
+            contentOffSetX = CGRectGetWidth(self.frame) / [_titleArray count];
+        }
+        CGFloat titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
+        if (self.currentSelectLineWidth <= 0) {
+            self.currentSelectLineWidth = titleCellWidth;
+        }
+        if (lastFrame.size.height == 0) {
+            lastFrame = CGRectMake(titleCellWidth / 2 - self.currentSelectLineWidth/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, self.currentSelectLineWidth, self.currentSelectLineHeight);
+        }
+        
+        if (scrollDistance < 0) {
+            re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),  self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
+        }else {
+            re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),  self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
+        }
     }
-//    NSLog(@"x=%f,y=%f,w=%f,h=%f",re.origin.x,re.origin.y,re.size.width,re.size.height);
+
 
     return re;
 
