@@ -166,43 +166,78 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 	if (collectionView.tag == titleCollectionViewTag) {
 		TitleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-//
-//        UIColor *textColor;
-//        if (_currentSelectIndex == indexPath.row) {
-//            CGFloat r = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-////            if (r < 0) {
-////                r = -r;
-////            }
-//            CGFloat g = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-////            if (g < 0) {
-////                g = -g;
-////            }
-//            CGFloat b = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
-////            if (b < 0) {
-////                b = -b;
-////            }
-//            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - b) alpha:1];
-//        }else {
-//            CGFloat r = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-////            if (r < 0) {
-////                r = -r;
-////            }
-//            CGFloat g = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
-////            if (g < 0) {
-////                g = -g;
-////            }
-//            CGFloat b = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
-////            if (b < 0) {
-////                b = -b;
-////            }
-//            textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] + b) alpha:1];
-//        }
+
         UIColor *textColor;
-        if (indexPath.row == self.currentSelectIndex) {
-            textColor = self.currentSelectTitleColor;
+        if (_currentSelectIndex == indexPath.row) {
+            CGFloat r = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+//            if (r < 0) {
+//                r = -r;
+//            }
+            CGFloat g = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+//            if (g < 0) {
+//                g = -g;
+//            }
+            CGFloat b = ([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
+//            if (b < 0) {
+//                b = -b;
+//            }
+            if (scrollDistance > 0) {
+                textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] - b) alpha:1];
+            }else {
+                textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue] + b) alpha:1];
+            }
+
+        }else if (indexPath.row == _currentSelectIndex + 1 || _currentSelectIndex - 1 == indexPath.row){
+            CGFloat r = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"R"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+            //            if (r < 0) {
+            //                r = -r;
+            //            }
+            CGFloat g = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"G"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;
+            //            if (g < 0) {
+            //                g = -g;
+            //            }
+            CGFloat b = ([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - [[self getRGBDictionaryByColor:self.currentSelectTitleColor][@"B"] floatValue]) / CGRectGetWidth(self.frame) * scrollDistance;;
+            //            if (b < 0) {
+            //                b = -b;
+            //            }
+
+            if (scrollDistance > 0) {
+                if (_currentSelectIndex + 1 == indexPath.row) {
+                    textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] - r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] - g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] - b) alpha:1];
+                }else {
+                    if (indexPath.row == self.currentSelectIndex) {
+                        textColor = self.currentSelectTitleColor;
+                    }else {
+                        textColor = self.normalTitleColor;
+                    }
+                }
+
+            }else {
+                if (_currentSelectIndex - 1 == indexPath.row) {
+                    textColor = [UIColor colorWithRed:([[self getRGBDictionaryByColor:self.normalTitleColor][@"R"] floatValue] + r) green:([[self getRGBDictionaryByColor:self.normalTitleColor][@"G"] floatValue] + g) blue:([[self getRGBDictionaryByColor:self.normalTitleColor][@"B"] floatValue] + b) alpha:1];
+                }else {
+                    if (indexPath.row == self.currentSelectIndex) {
+                        textColor = self.currentSelectTitleColor;
+                    }else {
+                        textColor = self.normalTitleColor;
+                    }
+                }
+
+            }
+
         }else {
-            textColor = self.normalTitleColor;
+            if (indexPath.row == self.currentSelectIndex) {
+                textColor = self.currentSelectTitleColor;
+            }else {
+                textColor = self.normalTitleColor;
+            }
         }
+//        UIColor *textColor;
+//        if (indexPath.row == self.currentSelectIndex) {
+//            textColor = self.currentSelectTitleColor;
+//        }else {
+//            textColor = self.normalTitleColor;
+//        }
         [cell configureCellWithTitle:_titleArray[indexPath.row] itemSize:_layout.itemSize color:textColor];
         cell.titleLabel.font = [UIFont systemFontOfSize:self.titleFontSize];
 		return cell;
