@@ -21,6 +21,7 @@
 		[self.contentView addSubview:_titleLabel];
 		_titleLabel.textAlignment = NSTextAlignmentCenter;
 	}
+    _titleLabel.frame = CGRectMake(0, 0, itemSize.width, itemSize.height);
 	_titleLabel.textColor = color;
 	_titleLabel.text = title;
 
