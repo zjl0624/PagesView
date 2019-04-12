@@ -443,28 +443,31 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
             contentOffSetX = CGRectGetWidth(self.frame) / [_titleArray count];
         }
         CGFloat titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
+        CGFloat selectLineWidth = 0;
         if (self.isTitleScroll) {
             titleCellWidth = self.titleWidth;
             if (self.currentSelectLineWidth <= 0) {
-                self.currentSelectLineWidth = titleCellWidth;
+                selectLineWidth = titleCellWidth;
             }else {
-
+                selectLineWidth = self.currentSelectLineWidth;
             }
         }else {
             titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
             if (self.currentSelectLineWidth <= 0) {
-                self.currentSelectLineWidth = titleCellWidth;
+                selectLineWidth = titleCellWidth;
+            }else {
+                selectLineWidth = self.currentSelectLineWidth;
             }
         }
 
-        if (lastFrame.size.height == 0) {
-            lastFrame = CGRectMake(titleCellWidth / 2 - self.currentSelectLineWidth/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, self.currentSelectLineWidth, self.currentSelectLineHeight);
+        if (lastFrame.size.width != selectLineWidth) {
+            lastFrame = CGRectMake(titleCellWidth / 2 - selectLineWidth/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, selectLineWidth, self.currentSelectLineHeight);
         }
         
         if (scrollDistance < 0) {
-            re = CGRectMake(scrollDistance/CGRectGetWidth(self.frame) * titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
+            re = CGRectMake(scrollDistance/CGRectGetWidth(self.frame) * titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),selectLineWidth, CGRectGetHeight(lastFrame));
         }else {
-            re = CGRectMake(scrollDistance/CGRectGetWidth(self.frame) * titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
+            re = CGRectMake(scrollDistance/CGRectGetWidth(self.frame) * titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),selectLineWidth, CGRectGetHeight(lastFrame));
         }
     }
 
