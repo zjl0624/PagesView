@@ -144,13 +144,19 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
-    [self.collectionView reloadData];
+    if (scrollView.tag == contentCollectionViewTag ) {
+        self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
+        [self.collectionView reloadData];
+    }
+
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
-    [self.collectionView reloadData];
+    if (scrollView.tag == contentCollectionViewTag ) {
+        self.currentSelectIndex = scrollView.contentOffset.x / CGRectGetWidth(scrollView.frame);
+        [self.collectionView reloadData];
+    }
+
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -329,7 +335,13 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 
 - (void)setCurrentSelectTitleColor:(UIColor *)currentSelectTitleColor {
     _currentSelectTitleColor = currentSelectTitleColor;
+    [_collectionView reloadData];
 //    [self layoutIfNeeded];
+}
+
+- (void)setNormalTitleColor:(UIColor *)normalTitleColor {
+    _normalTitleColor = normalTitleColor;
+    [_collectionView reloadData];
 }
 
 - (void)setIsTitleScroll:(BOOL)isTitleScroll {
@@ -431,17 +443,28 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
             contentOffSetX = CGRectGetWidth(self.frame) / [_titleArray count];
         }
         CGFloat titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
-        if (self.currentSelectLineWidth <= 0) {
-            self.currentSelectLineWidth = titleCellWidth;
+        if (self.isTitleScroll) {
+            titleCellWidth = self.titleWidth;
+            if (self.currentSelectLineWidth <= 0) {
+                self.currentSelectLineWidth = titleCellWidth;
+            }else {
+
+            }
+        }else {
+            titleCellWidth = CGRectGetWidth(self.frame)/[_titleArray count];
+            if (self.currentSelectLineWidth <= 0) {
+                self.currentSelectLineWidth = titleCellWidth;
+            }
         }
+
         if (lastFrame.size.height == 0) {
             lastFrame = CGRectMake(titleCellWidth / 2 - self.currentSelectLineWidth/2, CGRectGetHeight(self.collectionView.frame) - self.currentSelectLineHeight, self.currentSelectLineWidth, self.currentSelectLineHeight);
         }
         
         if (scrollDistance < 0) {
-            re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),  self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
+            re = CGRectMake(scrollDistance/CGRectGetWidth(self.frame) * titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
         }else {
-            re = CGRectMake(scrollDistance/[_titleArray count] * (titleCellWidth)  /  titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),  self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
+            re = CGRectMake(scrollDistance/CGRectGetWidth(self.frame) * titleCellWidth + CGRectGetMinX(lastFrame), CGRectGetMinY(lastFrame),self.currentSelectLineWidth, CGRectGetHeight(lastFrame));
         }
     }
 
