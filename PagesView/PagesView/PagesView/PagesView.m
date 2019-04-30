@@ -384,6 +384,8 @@ typedef NS_ENUM(NSInteger,CollectionViewTag){
 
 - (void)setCurrentSelectLineWidth:(float)currentSelectLineWidth {
     _currentSelectLineWidth = currentSelectLineWidth;
+    _currentSelectLineView.frame = [self getCurrentLineViewLocationWithScrollView:self.contentCollectionView];
+
 }
 
 #pragma mark - private method
